@@ -1,0 +1,21 @@
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+sudo dpkg -i minikube_latest_amd64.deb
+kubectl version
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+sudo apt-get install docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $(whoami)
+newgrp docker
+minikube start --driver=docker --nodes 5 --cpus 2
+kubectl get nodes
+NAME           STATUS   ROLES           AGE     VERSION
+minikube       Ready    control-plane   4m19s   v1.26.1
+minikube-m02   Ready    <none>          3m41s   v1.26.1
+minikube-m03   Ready    <none>          3m7s    v1.26.1
+minikube-m04   Ready    <none>          2m46s   v1.26.1
+minikube-m05   Ready    <none>          2m13s   v1.26.1
